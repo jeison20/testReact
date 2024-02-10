@@ -13,13 +13,12 @@ const NewsComponent = ({ noticias }) => {
         {noticias.map((noticia, index) => (
           <div key={index} style={{ marginBottom: '12px' }}>
             <Typography variant="subtitle1" gutterBottom>
-              <Link href={noticia.Link} target="_blank" rel="noopener noreferrer">
-                {noticia.Title}
+              <Link href={noticia.link || noticia.Link} target="_blank" rel="noopener noreferrer">
+                {noticia.title || noticia.Title} 
               </Link>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {noticia.Description}
-              {console.log(noticia)}
+              {noticia.description || noticia.Description}            
             </Typography>
           </div>
           

@@ -17,23 +17,16 @@ let noticiasRecorridas = [];
 
   const handleButtonClick = async () => {
     try {
-      
       if (!city.trim()) {
         console.error('Por favor, ingresa el nombre de la ciudad.');
-        return;
+        // return;
       }
-
-      
       const response = await axios.get(`https://localhost:7229/api/CheckInformation/Information?city=${city}`);
-
-     
-       
-                   
-        noticiasRecorridas.push(response.data.data.news);
-       
-     
-      setResult(response.data);
-      setNoticias(response.data.data.news);
+      if (response) {
+        noticiasRecorridas.push(response.data.news);
+        setResult(response.data.data.weathers);
+        setNoticias(response.data.data.news);
+      }
     } catch (error) {
       console.error('Error al consumir el servicio:', error.message);
     }
@@ -61,12 +54,12 @@ let noticiasRecorridas = [];
              {city}
             </Typography>
             <NewsComponent noticias={noticias} />
-           
+            <WeatherComponent weather={result} />
           </div>
       
        
       </Container>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
+        
         </div>
       )}
     </div>

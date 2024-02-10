@@ -1,48 +1,51 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import NewsComponent from './components/NewsComponent';
 import WeatherComponent from './components/WeatherComponent';
 import { Container, Typography } from '@mui/material';
 import '../style.css';
+
 const ENDPOINT_INFO_IMAGE = "https://localhost:7229/api/CheckInformation/GetRecrodsInformation";
 
-export function News(){
-    const [data, setFact] = useState();
-    const [noticias, setNoticias] = useState([]);
+export function News() {
+  const [data, setFact] = useState();
+  const [noticias, setNoticias] = useState([]);
 
-    let noticiasRecorridas = [];
-    useEffect(() => {
-      fetch(ENDPOINT_INFO_IMAGE)
-        .then((res) => res.json())
-        .then((resp) => {
-          const { data } = resp;
-          
-          setFact(data);
-          for (let i = 0; i < data.length; i++) {
-             const objetoJson = JSON.parse(data[i].info);   
-             objetoJson.city = data[i].city;              
-             noticiasRecorridas.push(objetoJson);
-            
-          }
-         setNoticias(noticiasRecorridas);
-          
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(ENDPOINT_INFO_IMAGE);
+        const { data } = response.data.data;
+        setFact(response.data.data);
+        
 
+        const noticiasRecorridas = response.data.data.map(item => {
+          const objetoJson = JSON.parse(item.info);
+          objetoJson.city = item.city;
+          return objetoJson;
         });
-    }, []);
-  
-    return (
-      <Container maxWidth="md" style={{ marginTop: '20px' }}>
-        {console.log(noticias)}  
-        {noticias.map((ciudadData, index) => (
-          <div key={index} style={{ marginBottom: '30px' }}>
-            <Typography variant="h4" gutterBottom>
-              {ciudadData.city}
-            </Typography>
-            <NewsComponent noticias={ciudadData.News} />
-            <WeatherComponent weather={ciudadData.Weathers} />
-          </div>
-        ))}
-      </Container>
-    );
 
+        setNoticias(noticiasRecorridas);
+      } catch (error) {
+        console.error('Error al obtener datos:', error.message);
+      }
+    };
 
+    fetchData();
+  }, []);
+
+  return (
+    <Container maxWidth="md" style={{ marginTop: '20px' }}>
+      
+      {noticias.map((ciudadData, index) => (
+        <div key={index} style={{ marginBottom: '30px' }}>
+          <Typography variant="h4" gutterBottom>
+            {ciudadData.city}
+          </Typography>
+          <NewsComponent noticias={ciudadData.News} />         
+          <WeatherComponent weather={ciudadData.Weathers} />
+        </div>
+      ))}
+    </Container>
+  );
 }

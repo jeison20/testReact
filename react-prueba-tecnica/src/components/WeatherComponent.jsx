@@ -9,8 +9,8 @@ const WeatherComponent = ({ weather }) => {
         <Typography variant="h5" component="div" gutterBottom>
           Clima
         </Typography>
-        <Typography variant="body1">Temperatura: {weather.Temperature} °C</Typography>
-        <Typography variant="body1">Humedad: {weather.Humidity}%</Typography>
+        <Typography variant="body1">Temperatura: {weather?.temperature} °C</Typography>
+        <Typography variant="body1">Humedad: {weather?.humidity}%</Typography>
         
       </CardContent>
     </Card>
